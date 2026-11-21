@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>API-Песочница - Визуальное тестирование API без программирования</title>
+    <meta name="description" content="Интерактивная веб-платформа для тестирования API. Работайте с OpenAI, Telegram, VK, GitHub, Discord и другими API без написания кода. Конструктор HTTP запросов, визуальный интерфейс, обучение REST API.">
+    <meta name="keywords" content="API, песочница, тестирование API, визуальный интерфейс, REST, HTTP запросы, разработка, обучение, OpenAI, Telegram, VK, GitHub, Discord, web-платформа, JSON, запрос, ответ, ключ API, авторизация, endpoint, статус-код, разработчики, обучение API, конструктор запросов, код без программирования, backend, frontend, Postman альтернатива, HTTP клиент, тест API, web-инструмент">
+    <meta name="author" content="API-Песочница">
+    <meta name="robots" content="index, follow">
+    <meta name="language" content="Russian">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="API-Песочница - Визуальное тестирование API">
+    <meta property="og:description" content="Интерактивная платформа для работы с API без программирования. Тестируйте OpenAI, Telegram, GitHub и другие API визуально.">
+    <meta property="og:image" content="/favicon.png">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="API-Песочница - Тестирование API визуально">
+    <meta name="twitter:description" content="Интерактивная платформа для работы с API. Обучение REST API, конструктор запросов, без программирования.">
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="manifest" href="/site.webmanifest">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="canonical" href="https://yourdomain.com/">
+</head>
+<body>
+
+    <div id="authScreen" class="auth-screen">
+        <div class="auth-container">
+            <div class="auth-logo">
+                <svg width="60" height="60" viewBox="0 0 60 60" fill="none">
+                    <rect width="60" height="60" rx="12" fill="url(#gradient)"/>
+                    <path d="M20 30L25 35L40 20" stroke="white" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+                    <defs>
+                        <linearGradient id="gradient" x1="0" y1="0" x2="60" y2="60">
+                            <stop stop-color="#667eea"/>
+                            <stop offset="1" stop-color="#764ba2"/>
+                        </linearGradient>
+                    </defs>
+                </svg>
+                <h1>API-Песочница</h1>
+                <p>Учись работать с API визуально</p>
+            </div>
+            <div class="auth-tabs">
+                <button class="auth-tab active" data-tab="login">Вход</button>
+                <button class="auth-tab" data-tab="register">Регистрация</button>
+            </div>
+            <div id="loginForm" class="auth-form active">
+                <div class="form-group">
+                    <label for="loginUsername">Никнейм</label>
+                    <div class="input-wrapper">
+                        <span class="input-icon">👤</span>
+                        <input type="text" id="loginUsername" class="auth-input" placeholder="Введите никнейм" autocomplete="username">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="loginPassword">Пароль</label>
+                    <div class="input-wrapper">
+                        <span class="input-icon">🔒</span>
+                        <input type="password" id="loginPassword" class="auth-input" placeholder="Введите пароль" autocomplete="current-password">
+                        <button type="button" class="toggle-password" onclick="togglePassword('loginPassword')" title="Показать/скрыть пароль">👁️</button>
+                    </div>
+                </div>
+                <button class="btn-primary btn-auth" onclick="login()">Войти</button>
+                <div id="loginError" class="error-message"></div>
+            </div>
+            <div id="registerForm" class="auth-form">
+                <div class="form-group">
+                    <label for="registerUsername">Никнейм</label>
+                    <div class="input-wrapper">
+                        <span class="input-icon">👤</span>
+                        <input type="text" id="registerUsername" class="auth-input" placeholder="Минимум 3 символа" autocomplete="username">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="registerPassword">Пароль</label>
+                    <div class="input-wrapper">
+                        <span class="input-icon">🔒</span>
+                        <input type="password" id="registerPassword" class="auth-input" placeholder="Минимум 6 символов" autocomplete="new-password">
+                        <button type="button" class="toggle-password" onclick="togglePassword('registerPassword')" title="Показать/скрыть пароль">👁️</button>
+                    </div>
+                </div>
+                <button class="btn-primary btn-auth" onclick="register()">Зарегистрироваться</button>
+                <div id="registerError" class="error-message"></div>
+            </div>
+        </div>
+    </div>
+    <div id="mainApp" class="main-app" style="display: none;">
+        <header class="header">
+            <div class="header-content">
+                <div class="logo">
+                    <svg width="40" height="40" viewBox="0 0 60 60" fill="none">
+                        <rect width="60" height="60" rx="12" fill="url(#gradient2)"/>
+                        <path d="M20 30L25 35L40 20" stroke="white" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+                        <defs>
+                            <linearGradient id="gradient2" x1="0" y1="0" x2="60" y2="60">
+                                <stop stop-color="#667eea"/>
+                                <stop offset="1" stop-color="#764ba2"/>
+                            </linearGradient>
+                        </defs>
+                    </svg>
+                    <span>API-Песочница</span>
+                </div>
+                <div class="header-actions">
+                    <button class="theme-toggle" onclick="toggleTheme()" title="Сменить тему">
+                        <span class="theme-icon">🌙</span>
+                    </button>
+                    <div class="user-info">
+                        <span id="usernameDisplay"></span>
+                        <button class="btn-secondary" onclick="logout()">Выйти</button>
+                    </div>
+                </div>
+            </div>
+        </header>
+        <nav class="main-nav">
+            <button class="nav-btn active" data-view="playground">
+                <span class="nav-icon">🚀</span>
+                Песочница
+            </button>
+            <button class="nav-btn" data-view="saved">
+                <span class="nav-icon">💾</span>
+                Сохранённые
+            </button>
+            <button class="nav-btn" data-view="tutorials">
+                <span class="nav-icon">📚</span>
+                Обучение
+            </button>
+            <button class="nav-btn" data-view="ratings">
+                <span class="nav-icon">⭐</span>
+                Рейтинг API
+            </button>
+            <button class="nav-btn" data-view="history">
+                <span class="nav-icon">📊</span>
+                История
+            </button>
+        </nav>
+        <main class="main-content">
+            <div id="playgroundView" class="view active">
+                <div class="api-selector-section">
+                    <label class="section-label" for="apiSelector">Выберите API</label>
+                    <select id="apiSelector" class="api-selector" onchange="changeAPI()" title="Выберите API для работы" aria-label="Выберите API для работы">
+                        <option value="">-- Выберите API --</option>
+                        <option value="OpenAI">OpenAI (ChatGPT)</option>
+                        <option value="Telegram">Telegram Bot API</option>
+                        <option value="VK">VK API</option>
+                        <option value="GitHub">GitHub API</option>
+                        <option value="Discord">Discord API</option>
+                        <option value="Twitter">Twitter API</option>
+                        <option value="Google Maps">Google Maps API</option>
+                        <option value="Stripe">Stripe API</option>
+                        <option value="Spotify">Spotify API</option>
+                        <option value="YouTube">YouTube Data API</option>
+                    </select>
+                </div>
+                <div id="apiPlayground" class="api-playground" style="display: none;">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>🔑 API Ключ</h3>
+                            <button class="btn-help" onclick="showHelp('apiKey')" title="Что это?">?</button>
+                        </div>
+                        <div class="card-body">
+                            <div class="input-group">
+                                <input type="password" id="apiKeyInput" class="input-field" placeholder="Введите ваш API ключ">
+                                <button class="btn-icon" onclick="toggleApiKeyVisibility()" title="Показать/скрыть">👁️</button>
+                                <button class="btn-secondary" onclick="saveApiKey()">Сохранить</button>
+                            </div>
+                            <p class="hint">Ключ будет сохранён в вашем аккаунте и зашифрован</p>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>🔧 Конструктор запроса</h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="form-group">
+                                <label for="httpMethod">HTTP Метод</label>
+                                <select id="httpMethod" class="select-field" title="Выберите HTTP метод запроса" aria-label="Выберите HTTP метод запроса">
+                                    <option value="GET">GET</option>
+                                    <option value="POST">POST</option>
+                                    <option value="PUT">PUT</option>
+                                    <option value="DELETE">DELETE</option>
+                                    <option value="PATCH">PATCH</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>
+                                    Endpoint URL
+                                    <button class="btn-help-inline" onclick="showHelp('endpoint')">?</button>
+                                </label>
+                                <input type="text" id="endpointUrl" class="input-field" placeholder="https://api.example.com/endpoint">
+                            </div>
+                            <div class="form-group">
+                                <label>
+                                    Заголовки (Headers)
+                                    <button class="btn-help-inline" onclick="showHelp('headers')">?</button>
+                                </label>
+                                <textarea id="headersInput" class="textarea-field" rows="4" placeholder='{"Content-Type": "application/json"}'></textarea>
+                            </div>
+                            <div class="form-group" id="bodyGroup">
+                                <label>
+                                    Тело запроса (Body)
+                                    <button class="btn-help-inline" onclick="showHelp('body')">?</button>
+                                </label>
+                                <textarea id="bodyInput" class="textarea-field" rows="6" placeholder='{"key": "value"}'></textarea>
+                            </div>
+                            <div class="button-group">
+                                <button class="btn-primary btn-large" onclick="sendRequest()">
+                                    🚀 Отправить запрос
+                                </button>
+                                <button class="btn-secondary" onclick="saveCurrentRequest()">
+                                    💾 Сохранить
+                                </button>
+                                <button class="btn-secondary" onclick="clearForm()">
+                                    🗑️ Очистить
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>📜 Предпросмотр запроса</h3>
+                        </div>
+                        <div class="card-body">
+                            <pre id="requestPreview" class="code-block">Заполните форму выше для формирования запроса...</pre>
+                        </div>
+                    </div>
+                    <div class="card" id="responseCard" style="display: none;">
+                        <div class="card-header">
+                            <h3>📩 Ответ от API</h3>
+                            <div class="response-meta">
+                                <span class="status-badge" id="statusBadge"></span>
+                                <span class="time-badge" id="timeBadge"></span>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <pre id="responseOutput" class="code-block response-block"></pre>
+                        </div>
+                    </div>
+                </div>
+                <div id="noApiSelected" class="empty-state">
+                    <div class="empty-icon">🎯</div>
+                    <h2>Выберите API для начала работы</h2>
+                    <p>Выберите нужный API из списка выше, чтобы начать отправлять запросы</p>
+                </div>
+            </div>
+            <div id="savedView" class="view">
+                <div class="view-header">
+                    <h2>💾 Сохранённые запросы</h2>
+                </div>
+                <div id="savedRequestsList" class="requests-list"></div>
+            </div>
+            <div id="tutorialsView" class="view">
+                <div class="view-header">
+                    <h2>📚 Учебные сценарии</h2>
+                    <p>Готовые примеры для изучения работы с популярными API</p>
+                </div>
+                <div id="tutorialsList" class="tutorials-list"></div>
+            </div>
+            <div id="ratingsView" class="view">
+                <div class="view-header">
+                    <h2>⭐ Рейтинг популярных API</h2>
+                    <p>Статистика использования API в песочнице</p>
+                </div>
+                <div id="ratingsChart" class="ratings-chart"></div>
+            </div>
+            <div id="historyView" class="view">
+                <div class="view-header">
+                    <h2>📊 История запросов</h2>
+                </div>
+                <div id="historyList" class="history-list"></div>
+            </div>
+        </main>
+    </div>
+    <div id="helpModal" class="modal">
+        <div class="modal-content">
+            <span class="modal-close" onclick="closeHelp()">&times;</span>
+            <h2 id="helpTitle"></h2>
+            <div id="helpContent"></div>
+        </div>
+    </div>
+    <div id="saveModal" class="modal">
+        <div class="modal-content">
+            <span class="modal-close" onclick="closeSaveModal()">&times;</span>
+            <h2>💾 Сохранить запрос</h2>
+            <div class="form-group">
+                <label>Название запроса</label>
+                <input type="text" id="saveRequestName" class="input-field" placeholder="Например: Получить профиль пользователя">
+            </div>
+            <div class="form-group">
+                <label>Описание (опционально)</label>
+                <textarea id="saveRequestDescription" class="textarea-field" rows="3" placeholder="Краткое описание запроса"></textarea>
+            </div>
+            <div class="button-group">
+                <button class="btn-primary" onclick="confirmSaveRequest()">Сохранить</button>
+                <button class="btn-secondary" onclick="closeSaveModal()">Отмена</button>
+            </div>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>

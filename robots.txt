@@ -1,0 +1,31 @@
+# robots.txt для API-Песочница
+User-agent: *
+Allow: /
+Disallow: /api.php
+Disallow: /config.php
+Disallow: /database.sql
+Disallow: /.htaccess
+# Sitemap
+Sitemap: https://yourdomain.com/sitemap.xml
+# Crawl-delay (опционально)
+# Crawl-delay: 1
+# Специальные правила для популярных поисковиков
+User-agent: Googlebot
+Allow: /
+Disallow: /api.php
+Disallow: /config.php
+User-agent: Bingbot
+Allow: /
+Disallow: /api.php
+Disallow: /config.php
+User-agent: Yandex
+Allow: /
+Disallow: /api.php
+Disallow: /config.php
+# Блокировка сканеров уязвимостей
+User-agent: AhrefsBot
+Disallow: /
+User-agent: SemrushBot
+Disallow: /
+User-agent: MJ12bot
+Disallow: /
